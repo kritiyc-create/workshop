@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clinic Chart — Datewise Diagnosis Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <p class="kicker">Local clinic chart</p>
+        <h1>Patient registry</h1>
+      </div>
+      <p class="privacy">Notes stay on this computer. Nothing is uploaded.</p>
+    </header>
+
+    <section class="dictate-panel" aria-label="Oral entry">
+      <div class="dictate-main">
+        <button id="micBtn" class="mic" type="button" aria-pressed="false">
+          <span class="mic-dot"></span>
+          <span id="micLabel">Hold to speak a visit</span>
+        </button>
+        <p class="hint">
+          Example: “Patient Ananya Mehta, 34 years, female. Diagnosis bronchial asthma. Treatment budesonide inhaler twice daily. Date today.”
+        </p>
+      </div>
+      <pre id="liveTranscript" class="transcript" aria-live="polite"></pre>
+    </section>
+
+    <form id="visitForm" class="visit-form">
+      <div class="form-grid">
+        <label>
+          Visit date
+          <input id="visitDate" type="date" required />
+        </label>
+        <label>
+          Patient name
+          <input id="patientName" type="text" autocomplete="name" required placeholder="Full name" />
+        </label>
+        <label>
+          Age
+          <input id="patientAge" type="text" inputmode="numeric" placeholder="e.g. 34" />
+        </label>
+        <label>
+          Sex
+          <select id="patientSex">
+            <option value="">Not recorded</option>
+            <option>Female</option>
+            <option>Male</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label class="span-2">
+          Diagnosis
+          <input id="diagnosis" type="text" required placeholder="Primary diagnosis" list="diagnosisList" />
+        </label>
+        <label class="span-2">
+          Treatment
+          <textarea id="treatment" rows="3" required placeholder="Medicines, dose, advice"></textarea>
+        </label>
+      </div>
+      <datalist id="diagnosisList"></datalist>
+      <div class="form-actions">
+        <button type="submit" class="primary">Save visit</button>
+        <button type="button" id="clearForm" class="ghost">Clear</button>
+        <span id="formStatus" class="status" role="status"></span>
+      </div>
+    </form>
+
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="day" role="tab" aria-selected="true">By date</button>
+      <button type="button" class="tab" data-tab="diagnosis" role="tab" aria-selected="false">By diagnosis</button>
+      <button type="button" class="tab" data-tab="patients" role="tab" aria-selected="false">Patients</button>
+    </nav>
+
+    <section id="panel-day" class="panel" role="tabpanel">
+      <div class="day-nav">
+        <button type="button" id="prevDay" class="ghost">← Previous</button>
+        <input id="browseDate" type="date" />
+        <button type="button" id="nextDay" class="ghost">Next →</button>
+        <button type="button" id="todayBtn" class="primary small">Today</button>
+      </div>
+      <h2 id="dayHeading" class="panel-title"></h2>
+      <div id="dayList" class="cards"></div>
+    </section>
+
+    <section id="panel-diagnosis" class="panel hidden" role="tabpanel">
+      <h2 class="panel-title">Stratified by diagnosis</h2>
+      <div id="diagnosisGroups" class="groups"></div>
+    </section>
+
+    <section id="panel-patients" class="panel hidden" role="tabpanel">
+      <label class="search">
+        Search patients
+        <input id="patientSearch" type="search" placeholder="Name or diagnosis" />
+      </label>
+      <div id="patientList" class="cards"></div>
+    </section>
+  </div>
+
+  <dialog id="patientDialog">
+    <form method="dialog" class="dialog-head">
+      <div>
+        <h2 id="dialogName"></h2>
+        <p id="dialogMeta" class="muted"></p>
+      </div>
+      <button value="close" class="ghost">Close</button>
+    </form>
+    <ol id="dialogTimeline" class="timeline"></ol>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
